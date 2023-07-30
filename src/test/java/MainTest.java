@@ -10,6 +10,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -24,29 +26,29 @@ public class MainTest {
 
     @BeforeAll
     public static void initDriver() {
-        WebDriverManager.chromedriver().setup();
+        WebDriverManager.firefoxdriver().setup();
     }
 
     @BeforeEach
     public void setUp(TestInfo info) {
-        ChromeOptions options = new ChromeOptions();
+        FirefoxOptions options = new FirefoxOptions();
         if (info.getTags().contains("headless")) {
-            options.addArguments("headless");
-            options.addArguments("window-size=3456x2234");
-            driver = new ChromeDriver(options);
-            logger.info("Открыли Chrome в headless режиме");
+            options.addArguments("--headless");
+            options.addArguments("window-size=1920x1080");
+            driver = new FirefoxDriver(options);
+            logger.info("Открыли браузер в headless режиме");
         } else if (info.getTags().contains("fullscreen")) {
-            driver = new ChromeDriver();
+            driver = new FirefoxDriver();
             driver.manage().window().fullscreen();
-            logger.info("Открыли Chrome в режиме киоска");
+            logger.info("Открыли браузер в режиме киоска");
         } else if (info.getTags().contains("maximize")) {
             //driver.manage().window().maximize();
             options.addArguments("--start-fullscreen");
-            driver = new ChromeDriver(options);
-            logger.info("Открыли Chrome в режиме полного экрана");
+            driver = new FirefoxDriver(options);
+            logger.info("Открыли браузер в режиме полного экрана");
         } else {
-            driver = new ChromeDriver();
-            logger.info("Открыли Chrome в обычном режиме");
+            driver = new FirefoxDriver();
+            logger.info("Открыли браузер в обычном режиме");
         }
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
@@ -64,8 +66,8 @@ public class MainTest {
         logger.info("Перешли по ссылке");
         driver.findElement(By.cssSelector("#search_form_input_homepage")).sendKeys("ОТУС", Keys.ENTER);
         logger.info("В поисковую строку ввели ОТУС");
-        WebElement element = driver.findElement(By.xpath("//*[@id='links']/child::div[1]//*[@data-testid='result-title-a']/span"));
-        String expectedText = "K-12 Student Growth Platform | Otus";
+        WebElement element = driver.findElement(By.xpath("//*[@id=\"r1-0\"]/div[2]/h2/a/span"));
+        String expectedText = "Онлайн‑курсы для профессионалов, дистанционное обучение современным ...";
         Assertions.assertEquals(expectedText, element.getText());
         logger.info("Проверили, что в поисковой выдаче первый результат Онлайн‑курсы для профессионалов, дистанционное обучение");
     }
@@ -98,13 +100,10 @@ public class MainTest {
     }
 
     private void auth() {
-        driver.findElement(By.cssSelector(".header3__button-sign-in")).click();
-        WebElement formElement = driver.findElement(By.xpath("//form[@action='/login/']"));
-        WebElement emailField = formElement.findElement(By.xpath(".//input[@name='email']"));
-        WebElement passField = formElement.findElement(By.xpath(".//input[@name = 'password']"));
-        enterToTextArea(emailField, cfg.login());
-        enterToTextArea(passField, cfg.password());
-        driver.findElement(By.xpath("//form[@action = '/login/']//button[@type = 'submit']")).submit();
+        driver.findElement(By.cssSelector(".sc-mrx253-0")).click();
+        driver.findElement(By.cssSelector("[name=email]")).sendKeys(cfg.login());
+        driver.findElement(By.cssSelector("[type=password]")).sendKeys(cfg.password());
+        driver.findElement(By.xpath("//div[contains(text(),'Войти')]")).click();
     }
 
     private void enterToTextArea(WebElement element, String text) {
