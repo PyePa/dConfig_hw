@@ -84,7 +84,7 @@ public class MainTest {
         logger.info("Нажали на любую картинку");
         By imgRes = By.xpath("//img[@id='fullResImage']");
         Assertions.assertTrue(getElement(imgRes).isDisplayed());
-        logger.info("Проверили, что картинка открылась в модальном окнеу");
+        logger.info("Проверили, что картинка открылась в модальном окне");
     }
 
     //полный экран
