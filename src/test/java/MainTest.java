@@ -34,7 +34,7 @@ public class MainTest {
         FirefoxOptions options = new FirefoxOptions();
         if (info.getTags().contains("headless")) {
             options.addArguments("--headless");
-            options.addArguments("window-size=1920x1080");
+            options.addArguments("window-size=3456x2234");
             driver = new FirefoxDriver(options);
             logger.info("Открыли браузер в headless режиме");
         } else if (info.getTags().contains("fullscreen")) {
@@ -91,9 +91,10 @@ public class MainTest {
     @Test
     @Tag(value = "maximize")
     public void maximizeTest() {
+        driver.manage().window().maximize();
         driver.get("https://otus.ru");
         logger.info("Перешли по ссылке");
-        auth();
+                auth();
         logger.info("Авторизовались");
         logger.info(driver.manage().getCookies());
         logger.info("Вывели Cookie");
